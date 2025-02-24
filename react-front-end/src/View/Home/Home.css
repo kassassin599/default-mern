@@ -1,0 +1,44 @@
+*{
+    font-family: sans-serif;
+}
+
+.data-card{
+    margin: 50px;
+    box-shadow: 10px 10px 50px grey;
+}
+.table-headers{
+    font-size: 24px;
+}
+.row-button{
+    margin-left: 10px;
+}
+.row-button:first-child{
+    margin-left: 0px;
+}
+
+.title-text{
+    color: grey;
+    text-align: center;
+    font-weight: bold;
+    margin: 50px;
+}
+.add-user-button{
+    float: right;
+    margin-right: 50px;
+    box-shadow: 5px 5px 10px grey;
+}
+
+.search-user-field{
+    float: right;
+    margin-right: 50px;
+}
+
+.user-button{
+    float: right;
+    margin-right: 50px;
+    box-shadow: 5px 5px 10px grey;
+}
+
+.blank-space{
+    height: 1px;
+}
