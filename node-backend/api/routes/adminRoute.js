@@ -47,4 +47,10 @@ router.put(
   AdminAuth,
   AdminController.update
 );
+router.post(
+  "/add",
+  upload.single("profilePic"),
+  AdminAuth,
+  AdminController.adduser
+);
 module.exports = router;

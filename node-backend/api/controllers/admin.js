@@ -279,3 +279,54 @@ exports.update = async (req, res, next) => {
     });
   }
 };
+
+exports.adduser = async (req, res, next) => {
+  const objValidation = new niv.Validator(req.body, {
+    name: "required",
+    email: "required|email",
+    password: "required|minLength:6",
+  });
+
+  try {
+    const matched = await objValidation.check();
+    if (!matched) {
+      return res
+        .status(422)
+        .send({ message: "Validation error", errors: objValidation.errors });
+    }
+
+    const userData = await UserDB.findOne({ email: req.body.email });
+    if (userData) {
+      return res.status(409).json({
+        message: "Email already exists",
+      });
+    }
+
+    if (!req.file) {
+      return res.status(409).json({
+        message: "Profile pic is required",
+      });
+    }
+
+    const hash = await bcrypt.hash(req.body.password, 10);
+
+    const user = new UserDB({
+      name: req.body.name,
+      email: req.body.email,
+      password: hash,
+      profilePic: req.file.path,
+    });
+
+    const result = await user.save();
+    return res.status(201).json({
+      message: "User has been successfully created",
+      result: result,
+    });
+  } catch (err) {
+    // Helper.writeErrorLog(req, err);
+    return res.status(500).json({
+      message: "Error occurred, Please try again later",
+      error: err.message,
+    });
+  }
+};

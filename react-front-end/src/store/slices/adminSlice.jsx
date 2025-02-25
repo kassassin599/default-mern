@@ -103,7 +103,10 @@ export const UpdateUserApi = (id, data) => async () => {
 
 export const UpdateStatusApi = (id, type) => async () => {
   try {
-    const response = await axios.put(`${PROXY}change-status/${id}`, {
+    // const response = await axios.put(`${PROXY}change-status/${id}`, {
+    //   flag: type,
+    // });
+    const response = await axiosHelper("put", `${PROXY}change-status/${id}`, {
       flag: type,
     });
     return response.data;
@@ -112,3 +115,4 @@ export const UpdateStatusApi = (id, type) => async () => {
     return error;
   }
 };
+

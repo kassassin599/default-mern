@@ -14,7 +14,6 @@ import {
   ModalFooter,
   Label,
   FormGroup,
-  Form,
   Input,
   Card,
   CardBody,
@@ -32,6 +31,9 @@ import {
   UpdateUserApi,
 } from "../../store/slices/adminSlice";
 import { useSelector } from "react-redux";
+import { ErrorMessage, useFormik } from "formik";
+import * as Yup from "yup";
+import EditUserModel from "../../components/Popup/EditUserModel";
 
 const Home = () => {
   const { getUserList, getUserLoading } = useSelector(
@@ -40,10 +42,7 @@ const Home = () => {
 
   const [modal, setModal] = useState(false);
   const [modalCheck, setModalCheck] = useState(false);
-  const [name, setFname] = useState("");
-  const [email, setEmail] = useState("");
-  const [nameError, setFnameError] = useState("");
-  const [emailError, setEmailError] = useState("");
+  const [rowData, setRowData] = useState("");
   const [edtibleIndex, setEdtibleIndex] = useState(null);
   const [id, setId] = useState("");
   const [search, setSearch] = useState("");
@@ -63,10 +62,9 @@ const Home = () => {
 
   const handleEdit = (data, index) => {
     setModal(true);
-    setFname(data?.name);
-    setEmail(data?.email);
     setId(data?._id);
     setEdtibleIndex(index);
+    setRowData(data);
   };
   const handleSearch = (e) => {
     let str = e ? e.target.value : "";
@@ -157,50 +155,6 @@ const Home = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    let ValidationFlag = false;
-    if (name === "") {
-      ValidationFlag = true;
-      setFnameError("First Name cannot be empty");
-      setEmailError("");
-    } else if (email === "") {
-      ValidationFlag = true;
-      setEmailError("Email Field is Required");
-      setFnameError("");
-    } else {
-      ValidationFlag = false;
-      setFnameError("");
-      setEmailError("");
-    }
-
-    if (!ValidationFlag) {
-      if (edtibleIndex === null) {
-        // setUsers([...users, { name: name, email: email }]);
-        setEmail("");
-        setFname("");
-        setModal(false);
-        setEdtibleIndex(null);
-      } else {
-        // const updatedUsers = users.map((user, i) => {
-        //   if (i === edtibleIndex) {
-        //     return { name: name, email: email }; // Return updated user
-        //   }
-        //   return user; // Return existing user
-        // });
-
-        // setUsers(updatedUsers);
-        dispatch(UpdateUserApi(id, { name, email })).then((res) => {
-          dispatch(GetAllUsersApi(1, 10, ""));
-        });
-        setEdtibleIndex(null);
-        setEmail("");
-        setFname("");
-        setModal(false);
-      }
-    }
-  };
-  // console.log("edtibleIndex", edtibleIndex, nameError);
   return (
     <>
       <ToastContainer
@@ -307,7 +261,7 @@ const Home = () => {
                             )
                           }
                           appearance="primary"
-                          color={row?.flag === 2?"green":"red"}
+                          color={row?.flag === 2 ? "green" : "red"}
                           onClick={() => handleStatus(row, index)}
                         ></IconButton>
                       </td>
@@ -325,53 +279,15 @@ const Home = () => {
           </Table>
         </CardBody>
       </Card>
-      {/* {modal && <AddUserPopup open={modal} close={handleCloseClick} />} */}
-      <Modal isOpen={modal} toggle={handleCloseClick}>
-        <ModalHeader toggle={handleCloseClick}>
-          {edtibleIndex === null ? "Add" : "Update"} User
-        </ModalHeader>
-        <ModalBody>
-          <Form>
-            <FormGroup>
-              <Label for="Name">First Name</Label>
-              <Input
-                id="Name"
-                placeholder="First Name here.."
-                type="text"
-                name="name"
-                value={name}
-                onChange={(e) => setFname(e ? e.target.value : "")}
-                invalid={name.length > 0 ? true : false}
-              />
-            </FormGroup>
-            <h6 style={{ color: "red" }}>{nameError}</h6>
-            <FormGroup>
-              <Label for="exampleEmail">Email</Label>
-              <Input
-                id="exampleEmail"
-                placeholder="with a placeholder"
-                type="email"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e ? e.target.value : "")}
-                invalid={emailError.length > 0 ? true : false}
-              />
-            </FormGroup>
-            <h6 style={{ color: "red" }}>{emailError}</h6>
-            <Button
-              color="primary"
-              type="submit"
-              onClick={(e) => handleSubmit(e)}
-            >
-              {edtibleIndex === null ? "Submit" : "Update"}
-            </Button>
-          </Form>
-        </ModalBody>
-        {/* <ModalFooter>
-          <Button color="primary">Do Something</Button>
-          <Button color="secondary">Cancel</Button>
-        </ModalFooter> */}
-      </Modal>
+      {modal && <AddUserModel open={modal} close={handleCloseClick} />}
+      {modal && id && (
+        <EditUserModel
+          id={id}
+          rowData={rowData}
+          open={modal}
+          close={handleCloseClick}
+        />
+      )}
     </>
   );
 };
