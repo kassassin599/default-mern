@@ -307,7 +307,7 @@ const Home = () => {
                             )
                           }
                           appearance="primary"
-                          color="orange"
+                          color={row?.flag === 2?"green":"red"}
                           onClick={() => handleStatus(row, index)}
                         ></IconButton>
                       </td>
