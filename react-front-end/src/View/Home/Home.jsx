@@ -23,6 +23,8 @@ import "rsuite/dist/rsuite.min.css";
 import { IconButton } from "rsuite";
 import TrashIcon from "@rsuite/icons/Trash";
 import EditIcon from "@rsuite/icons/Edit";
+import MinusRoundIcon from "@rsuite/icons/MinusRound";
+import PlusRoundIcon from "@rsuite/icons/PlusRound";
 import { dispatch } from "../../store/store";
 import {
   GetAllUsersApi,
@@ -82,7 +84,7 @@ const Home = () => {
     setEdtibleIndex(index);
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to delete this!",
+      text: "You won't be able to undo this!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -101,6 +103,58 @@ const Home = () => {
         dispatch(GetAllUsersApi(1, 10, ""));
       });
     });
+  };
+  const handleStatus = async (data, index) => {
+    setId(data?._id);
+
+    let flag = 2;
+
+    data.flag == 1 ? (flag = 2) : (flag = 1);
+
+    setEdtibleIndex(index);
+    if (flag == 2) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "This user will be disabled!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, disable it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "Disabled!",
+            text: "This user has been disabled.",
+            icon: "success",
+          });
+          dispatch(UpdateStatusApi(data?._id, flag)).then((res) => {
+            dispatch(GetAllUsersApi(1, 10, ""));
+          });
+        }
+      });
+    } else if (flag == 1) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "This user will be enabled!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, enable it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "Enabled!",
+            text: "This user has been enabled.",
+            icon: "success",
+          });
+          dispatch(UpdateStatusApi(data?._id, flag)).then((res) => {
+            dispatch(GetAllUsersApi(1, 10, ""));
+          });
+        }
+      });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -208,7 +262,15 @@ const Home = () => {
                   {getUserList?.docs?.map((row, index) => (
                     <tr key={index}>
                       <th scope="row">{index + 1}</th>
-                      <td>{row?.name}</td>
+                      {/* <td>{row?.name}</td> */}
+                      <td
+                        style={{
+                          textDecoration:
+                            row?.flag === 2 ? "line-through" : "none",
+                        }}
+                      >
+                        {row?.name}
+                      </td>
                       <td>{row?.email}</td>
                       <td>
                         {/* <Button
@@ -234,6 +296,19 @@ const Home = () => {
                           appearance="primary"
                           color="red"
                           onClick={() => handleDelete(row, index)}
+                        ></IconButton>
+                        <IconButton
+                          className="row-button"
+                          icon={
+                            row?.flag === 2 ? (
+                              <PlusRoundIcon />
+                            ) : (
+                              <MinusRoundIcon />
+                            )
+                          }
+                          appearance="primary"
+                          color="orange"
+                          onClick={() => handleStatus(row, index)}
                         ></IconButton>
                       </td>
                     </tr>
