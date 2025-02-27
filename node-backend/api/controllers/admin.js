@@ -210,9 +210,9 @@ exports.change_status = async (req, res) => {
   updateObj.flag = flag;
   try {
     let message;
-    if (flag == 1) message = "USer has been successfully enabled";
-    if (flag == 2) message = "USer has been successfully disabled";
-    if (flag == 3) message = "USer has been successfully deleted";
+    if (flag == 1) message = "User has been successfully enabled";
+    if (flag == 2) message = "User has been successfully disabled";
+    if (flag == 3) message = "User has been successfully deleted";
 
     const result = await UserDB.findByIdAndUpdate(
       id,

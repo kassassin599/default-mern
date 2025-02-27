@@ -94,7 +94,7 @@ function EditUserModel({ open, close, id, rowData }) {
   return (
     <div>
       <Modal isOpen={open} toggle={toggleClose}>
-        <ModalHeader toggle={toggleClose}>Add User</ModalHeader>
+        <ModalHeader toggle={toggleClose}>Edit User Details</ModalHeader>
         <ModalBody>
           <form onSubmit={formik.handleSubmit}>
             <label htmlFor="name">Name</label>

@@ -113,46 +113,12 @@ const Home = () => {
 
     setEdtibleIndex(index);
     if (flag == 2) {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "This user will be disabled!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, disable it!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire({
-            title: "Disabled!",
-            text: "This user has been disabled.",
-            icon: "success",
-          });
-          dispatch(UpdateStatusApi(data?._id, flag)).then((res) => {
-            dispatch(GetAllUsersApi(1, 10, ""));
-          });
-        }
+      dispatch(UpdateStatusApi(data?._id, flag)).then((res) => {
+        dispatch(GetAllUsersApi(1, 10, ""));
       });
     } else if (flag == 1) {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "This user will be enabled!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, enable it!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire({
-            title: "Enabled!",
-            text: "This user has been enabled.",
-            icon: "success",
-          });
-          dispatch(UpdateStatusApi(data?._id, flag)).then((res) => {
-            dispatch(GetAllUsersApi(1, 10, ""));
-          });
-        }
+      dispatch(UpdateStatusApi(data?._id, flag)).then((res) => {
+        dispatch(GetAllUsersApi(1, 10, ""));
       });
     }
   };
