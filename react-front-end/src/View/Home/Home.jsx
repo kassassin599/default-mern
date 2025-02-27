@@ -34,6 +34,7 @@ import { useSelector } from "react-redux";
 import { ErrorMessage, useFormik } from "formik";
 import * as Yup from "yup";
 import EditUserModel from "../../components/Popup/EditUserModel";
+import { Base_Image_URL } from "../../config";
 
 const Home = () => {
   const { getUserList, getUserLoading } = useSelector(
@@ -58,6 +59,7 @@ const Home = () => {
   const handleCloseClick = () => {
     setModal(false);
     setEdtibleIndex(null);
+    dispatch(GetAllUsersApi(1, 10, ""));
   };
 
   const handleEdit = (data, index) => {
@@ -223,6 +225,13 @@ const Home = () => {
                             row?.flag === 2 ? "line-through" : "none",
                         }}
                       >
+                        <img
+                          src={Base_Image_URL + row?.profilePic}
+                          alt="preview"
+                          width="50px"
+                          height="auto"
+                          style={{ borderRadius: "50%" }}
+                        />
                         {row?.name}
                       </td>
                       <td>{row?.email}</td>

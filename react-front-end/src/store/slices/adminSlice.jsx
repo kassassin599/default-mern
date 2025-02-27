@@ -101,6 +101,17 @@ export const UpdateUserApi = (id, data) => async () => {
   }
 };
 
+export const AddUserApi = (data) => async () => {
+  try {
+    // const response = await axios.put(`${PROXY}update/${id}`, data);
+    const response = await axiosHelper("post", `${PROXY}add-user`, data);
+    return response.data;
+  } catch (error) {
+    // dispatch(slices.actions.Login_Failed(error));
+    return error;
+  }
+};
+
 export const UpdateStatusApi = (id, type) => async () => {
   try {
     // const response = await axios.put(`${PROXY}change-status/${id}`, {
@@ -115,4 +126,3 @@ export const UpdateStatusApi = (id, type) => async () => {
     return error;
   }
 };
-

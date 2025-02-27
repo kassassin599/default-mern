@@ -48,7 +48,7 @@ router.put(
   AdminController.update
 );
 router.post(
-  "/add",
+  "/add-user",
   upload.single("profilePic"),
   AdminAuth,
   AdminController.adduser
