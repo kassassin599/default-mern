@@ -16,9 +16,14 @@ import Signup from "../Signup";
 import { ErrorMessage, useFormik } from "formik";
 import * as Yup from "yup";
 import { dispatch } from "../../store/store";
-import { UpdateStatusApi, AddUserApi, UpdateUserApi } from "../../store/slices/adminSlice";
+import {
+  UpdateStatusApi,
+  AddUserApi,
+  UpdateUserApi,
+} from "../../store/slices/adminSlice";
 import PreviewImage from "../common/PreviewImage";
 import { Base_Image_URL } from "../../config";
+import { IMAGES_FILE_SUPPORTED_FORMATS } from "../common/Validation";
 
 function EditUserModel({ open, close, id, rowData }) {
   const fileRef = useRef(null);
@@ -56,13 +61,26 @@ function EditUserModel({ open, close, id, rowData }) {
     });
   };
 
+  const profilePicValidationSchema = Yup.mixed()
+    .test(
+      "FILE_FORMAT",
+      "(Note: Only JPEG, JPG, PNG image type allowed)",
+      (value) =>
+        !value || IMAGES_FILE_SUPPORTED_FORMATS.includes(value?.type.toString())
+    )
+    .test(
+      "FILE_SIZE",
+      "Please select an image smaller than 10 MB",
+      (value) => !value || value.size <= 1024 * 1024 * 10
+    );
+
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name field is required"),
     email: Yup.string()
       .email("Invalid Email")
       .required("Email field is required"),
-      password: Yup.string()
-            .min(6, 'Password must be at least 6 characters'),
+    password: Yup.string().min(6, "Password must be at least 6 characters"),
+    profile_pic: profilePicValidationSchema,
   });
 
   const validate = (values) => {
@@ -161,7 +179,9 @@ function EditUserModel({ open, close, id, rowData }) {
                 formik.touched.profile_pic && formik.errors.profile_pic
               }
               onBlur={formik.handleBlur}
+              accept={IMAGES_FILE_SUPPORTED_FORMATS.join(",")}
             />
+            <p>(Note: Only JPEG, JPG, PNG image type allowed)</p>
             {(formik.values.profile_pic && (
               <PreviewImage file={formik.values.profile_pic || profilePic} />
             )) ||
